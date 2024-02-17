@@ -11,6 +11,7 @@ use App\Models\Empdetail;
 use App\Models\Event;
 use App\Models\Notification;
 use App\Models\Order;
+use App\Models\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -250,6 +251,36 @@ class UserOrderController extends Controller
             return redirect($url)->with('success', 'Order placed successfully');
         }
     }
+
+
+    public function invoice_store(Request $request)
+    {
+        $request->validate([
+            "number" => "required|string",
+            "date" => "required|string",
+            "slip_number" => "required|string",
+            "slip_date" => "required|string",
+            "upload_copy" => "required|image|mimes:jpeg,png,jpg,pdf",
+        ]);
+
+        if ($request->hasFile("upload_copy")) {
+            $file = $request->file("upload_copy");
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(\public_path("invoice_upload_copy/"), $imageName);
+
+            $invoices = new Invoice([
+                "number" => $request->number,
+                "date" => $request->date,
+                "slip_number" => $request->slip_number,
+                "slip_date" => $request->slip_date,
+                "upload_copy" => $imageName,
+            ]);
+            $invoices->save();
+        }
+        return redirect()->back();
+        // return redirect()->route('frontend.order')->with('success', 'Added Successfully');
+    }
+
 
     public function sendMessage() // TODO
     {

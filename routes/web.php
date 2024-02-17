@@ -59,6 +59,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-edit/{id}', [UserOrderController::class, 'orderEdit']);
     Route::post('/order-update/{id}', [UserOrderController::class, 'orderUpdate']);
 
+
+
+    // Route::get('invoice', [UserOrderController::class, 'index'])->name('invoice.index');
+    // Route::get('invoice/create', [UserOrderController::class, 'create'])->name('invoice.create');
+    Route::post('invoice', [UserOrderController::class, 'invoice_store'])->name('invoice.store');
+    // Route::delete('invoice/delete/{testimonial}', [UserOrderController::class, 'destroy'])->name('invoice.destroy');
+    // Route::post('invoice/update/{testimonial}', [UserOrderController::class, 'update'])->name('invoice.update');
+    // Route::get('invoice/edit/{testimonial}', [UserOrderController::class, 'edit'])->name('invoice.edit');
+
+
+
     // ?Order Status updation routes
     Route::post('/m-done/{id}/{orderId}', [UserOrderController::class, 'measurement_done']);
     Route::post('/m-pending/{id}', [UserOrderController::class, 'measurement_pending']);
