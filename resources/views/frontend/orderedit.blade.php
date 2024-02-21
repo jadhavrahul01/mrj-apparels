@@ -221,23 +221,22 @@
                                             <option value="MD">Measurement Done</option>
                                             <option value="MP">Measurement Pending</option>
                                             <option value="RD">Ready for dispatch</option>
+                                            <option value="D">Dispatched</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-4 form-group mx-sm-3 mb-2">
                                         <button type="submit" class="btn btn-primary">Update</button>
-
                                     </div>
-
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4 form-group mx-sm-3 mb-2">
-                    <button type="button" class="mb-2 btn btn-sm btn-primary ms-4" data-toggle="modal"
+                    {{-- <button type="button" class="mb-2 btn btn-sm btn-primary ms-4" data-toggle="modal"
                         data-target="#eModal">
                         Invoice
-                    </button>
+                    </button> --}}
                 </div>
 
 
@@ -321,9 +320,10 @@
                                                     <span class="text-success">Measurement Done</span>
                                                 @elseif ($od->status == 'RD')
                                                     <span class="text-success">Ready for dispatch</span>
+                                                @elseif ($od->status == 'D')
+                                                    <span class="text-success">Dispatched</span>
                                                 @endif
                                             </td>
-
                                             <td>
                                                 <div class="dropdown ms-auto c-pointer">
                                                     <div class="btn-link" data-bs-toggle="dropdown">
@@ -370,6 +370,17 @@
                                                                     Ready for dispatch
                                                                 </button>
                                                             </form>
+                                                            @if ($od->status == 'RD')
+                                                                <form action="/emp_dispatch/{{ $od->id }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <button type="button" data-toggle="modal"
+                                                                        data-target="#eModal"
+                                                                        class="text-black dropdown-item">
+                                                                        Dispatched
+                                                                    </button>
+                                                                </form>
+                                                            @endif
                                                         @elseif ($od->fabrics_status == 0)
                                                             <span class="text-center">
                                                                 Waiting for fabric availability

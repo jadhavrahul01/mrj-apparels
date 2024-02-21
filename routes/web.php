@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/p-pending/{id}', [UserOrderController::class, 'readyfordispatch_paymentpending']);
     Route::post('/bulk-update', [UserOrderController::class, 'bulkUpdate']);
     Route::post('/ready-dispatch/{id}', [UserOrderController::class, 'ready_dispatch']);
+    Route::post('/emp_dispatch/{id}', [UserOrderController::class, 'emp_dispatch']);
     Route::get('/calender', [AdminDashboardController::class, 'calender'])->name('calender');
     Route::post('/dispatch/{id}', [UserOrderController::class, 'dispatch']);
     Route::get('/calender', [AdminDashboardController::class, 'calender'])->name('calender');

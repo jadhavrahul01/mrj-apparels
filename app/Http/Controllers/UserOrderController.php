@@ -244,43 +244,9 @@ class UserOrderController extends Controller
                 $cusDetails->phone = $request->phone1;
                 $cusDetails->save();
             }
-
-
-
-
             return redirect($url)->with('success', 'Order placed successfully');
         }
     }
-
-
-    public function invoice_store(Request $request)
-    {
-        $request->validate([
-            "number" => "required|string",
-            "date" => "required|string",
-            "slip_number" => "required|string",
-            "slip_date" => "required|string",
-            "upload_copy" => "required|image|mimes:jpeg,png,jpg,pdf",
-        ]);
-
-        if ($request->hasFile("upload_copy")) {
-            $file = $request->file("upload_copy");
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(\public_path("invoice_upload_copy/"), $imageName);
-
-            $invoices = new Invoice([
-                "number" => $request->number,
-                "date" => $request->date,
-                "slip_number" => $request->slip_number,
-                "slip_date" => $request->slip_date,
-                "upload_copy" => $imageName,
-            ]);
-            $invoices->save();
-        }
-        return redirect()->back();
-        // return redirect()->route('frontend.order')->with('success', 'Added Successfully');
-    }
-
 
     public function sendMessage() // TODO
     {
@@ -430,6 +396,9 @@ class UserOrderController extends Controller
                 case 'RD':
                     $emp->status = "RD";
                     break;
+                case 'D':
+                    $emp->status = "D";
+                    break;
                 default:
                     return back()->with('error', 'Invalid status');
             }
@@ -527,6 +496,46 @@ class UserOrderController extends Controller
         }
     }
 
+    protected function emp_dispatch($id)
+    {
+        $emp = Empdetail::findOrFail($id);
+
+        if ($emp) {
+            $emp->status = "D";
+            $emp->update();
+
+            return back()->with('success', 'Status updated successfully to Dispatched');
+        } else {
+            return back()->with('error', 'Something went wrong!');
+        }
+    }
+
+    public function invoice_store(Request $request)
+    {
+        $request->validate([
+            "number" => "required|string",
+            "date" => "required|string",
+            "slip_number" => "required|string",
+            "slip_date" => "required|string",
+            "upload_copy" => "required|image|mimes:jpeg,png,jpg,pdf",
+        ]);
+
+        if ($request->hasFile("upload_copy")) {
+            $file = $request->file("upload_copy");
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(\public_path("invoice_upload_copy/"), $imageName);
+
+            $invoices = new Invoice([
+                "number" => $request->number,
+                "date" => $request->date,
+                "slip_number" => $request->slip_number,
+                "slip_date" => $request->slip_date,
+                "upload_copy" => $imageName,
+            ]);
+            $invoices->save();
+        }
+        return back()->with('success', 'Updated successfully to Dispatched');
+    }
     protected function dispatch($id)
     {
         $order = Order::findOrFail($id);
