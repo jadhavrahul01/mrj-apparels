@@ -191,7 +191,7 @@ class AdminDashboardController extends Controller
 
         foreach ($events as $ev) {
             $tasks[] = [
-                'title' => $ev->title . ' assign to:' . $ev->assignName1 . ',' . $ev->assignName2,
+                'title' => $ev->title . ' assign to:' . $ev->company_name . ',' . $ev->assignName1 . ',' . $ev->assignName2,
                 'start' => $ev->start_date,
                 'end' => $ev->end_date,
             ];
@@ -203,6 +203,7 @@ class AdminDashboardController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:198',
+            'company_name' => 'required|max:198',
             'assign1' => 'required|max:198',
             'assign2' => 'required|max:198',
             'start_date' => 'required|max:100',
@@ -221,6 +222,7 @@ class AdminDashboardController extends Controller
             if ($start_date >= $today) {
                 $events = new Event([
                     'title' => $request->input('title'),
+                    'company_name' => $request->input('company_name'),
                     'assignName1' => $request->input('assign1'),
                     'assignName2' => $request->input('assign2'),
                     'start_date' => $request->input('start_date'),

@@ -267,7 +267,7 @@
                                     <label for="" class="mt-1">Packaging Slip Date</label>
                                     <input type="date" class="form-control" name="slip_date" required>
                                     <label for="" class="mt-1">Upload Copy</label>
-                                    <input type="file" class="form-control" name="upload_copy">
+                                    <input type="file" class="form-control" name="image[]" multiple="multiple" name="upload_copy">
                                     <ul id="errstatus"></ul>
                                 </div>
                                 <div class="modal-footer">

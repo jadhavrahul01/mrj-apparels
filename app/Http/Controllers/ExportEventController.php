@@ -44,6 +44,7 @@ class ExportEventController extends Controller
                 foreach ($events as $event) {
                     $row['Sr. No']  = $event->id;
                     $row['Event']    = $event->title;
+                    $row['Company Name']    = $event->company_name;
                     $row['Assign 1']    = $event->assignName1;
                     $row['Assign 2']  = $event->assignName2;
                     $row['Start Date']  = $event->start_date;

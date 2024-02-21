@@ -38,6 +38,7 @@
                         <div class="modal-body">
                             <ul id="errstatus"></ul>
                             <input type="text" name="title" id="titleData" class="form-control" placeholder="Enter Title of the event" required autofocus>
+                            <input type="text" name="company_name" id="company_name" class="mt-2 form-control" placeholder="Enter Customer/Company Name" required autofocus>
                             <input type="text" name="assignName1" id="assignName1" class="mt-2 form-control" placeholder="Enter Name 1" required>
                             <input type="text" name="assignName2" id="assignName2" class="mt-2 form-control" placeholder="Enter Name 2" required>
                         </div>
@@ -45,7 +46,6 @@
                             <button type="button" class="btn btn-default waves-effect btn-modal-close" data-bs-dismiss="modal">
                                 Close
                             </button>
-
                             <button type="button" id="saveData" class="btn btn-success save-event waves-effect waves-light">
                                 Create event
                             </button>
@@ -138,6 +138,7 @@
 
                 $('#saveData').click(function() {
                     var title = $('#titleData').val();
+                    var company_name = $('#company_name').val();
                     var assign1 = $('#assignName1').val();
                     var assign2 = $('#assignName2').val();
                     var start_date = moment(arg.start).format('YYYY-MM-DD');
@@ -152,6 +153,7 @@
                         , url: "{{ route('calendar.event') }}"
                         , data: {
                             title
+                            ,company_name
                             , assign1
                             , assign2
                             , start_date
