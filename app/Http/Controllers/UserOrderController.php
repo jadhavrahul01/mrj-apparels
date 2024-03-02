@@ -384,6 +384,9 @@ class UserOrderController extends Controller
 
         $employees = Empdetail::whereIn('id', $ids)->get();
         foreach ($employees as $emp) {
+            if ($emp->status == 'D') {
+                continue;
+            }
             switch ($status) {
                 case 'MD':
                     $emp->status = "MD";
@@ -512,29 +515,99 @@ class UserOrderController extends Controller
 
     public function invoice_store(Request $request)
     {
-        $request->validate([
-            "number" => "required|string",
-            "date" => "required|string",
-            "slip_number" => "required|string",
-            "slip_date" => "required|string",
-            "upload_copy" => "required|image|mimes:jpeg,png,jpg,pdf",
-        ]);
-
-        if ($request->hasFile("upload_copy")) {
-            $file = $request->file("upload_copy");
-            $imageName = time() . '_' . $file->getClientOriginalName();
-            $file->move(\public_path("invoice_upload_copy/"), $imageName);
-
-            $invoices = new Invoice([
-                "number" => $request->number,
-                "date" => $request->date,
-                "slip_number" => $request->slip_number,
-                "slip_date" => $request->slip_date,
-                "upload_copy" => $imageName,
+        try {
+            $request->validate([
+                'od_id' => 'required|string',
+                "number" => "required|string",
+                "date" => "required|string",
+                "slip_number" => "required|string",
+                "slip_date" => "required|string",
+                "image" => "required",
+                "image.*" => "mimes:jpeg,png,jpg,pdf",
             ]);
-            $invoices->save();
+
+            $imageNames = [];
+            if ($request->hasFile("image")) {
+                foreach ($request->file("image") as $file) {
+                    $imageName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(\public_path("invoice_upload_copy/"), $imageName);
+                    $imageNames[] = $imageName;
+                }
+            }
+
+            // Split od_id by comma
+            $od_ids = explode(',', $request->od_id);
+
+            foreach ($od_ids as $od_id) {
+                $invoices = new Invoice([
+                    "employee_id" => $od_id,
+                    "number" => $request->number,
+                    "date" => $request->date,
+                    "slip_number" => $request->slip_number,
+                    "slip_date" => $request->slip_date,
+                    "upload_copy" => json_encode($imageNames),
+                ]);
+                $invoices->save();
+
+                $empdetail = Empdetail::findOrFail($od_id);
+
+                if ($empdetail) {
+                    $empdetail->status = 'D';
+                    $empdetail->save();
+                }
+            }
+
+            return back()->with('success', 'Updated successfully to Dispatched');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
-        return back()->with('success', 'Updated successfully to Dispatched');
+    }
+
+
+    public function download($id)
+    {
+        try {
+            $invoice = Invoice::where('employee_id', $id)->first();
+
+            if (!$invoice) {
+                return back()->with('error', 'No invoice found for this employee');
+            }
+
+            $files = json_decode($invoice->upload_copy);
+
+            if (count($files) > 0) {
+                $zip = new \ZipArchive();
+                $zipName = public_path('invoice_upload_copy/' . time() . '.zip');
+
+                if ($zip->open($zipName, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== TRUE) {
+                    return back()->with('error', 'Could not open the zip file for writing');
+                }
+
+                foreach ($files as $file) {
+                    $filePath = public_path('invoice_upload_copy/' . $file);
+                    if (file_exists($filePath) && is_readable($filePath)) {
+                        $zip->addFile($filePath, basename($filePath));
+                    } else {
+                        $zip->close();
+                        unlink($zipName);
+                        return back()->with('error', 'File does not exist or is not readable: ' . $file);
+                    }
+                }
+
+                $zip->close();
+
+                if (file_exists($zipName)) {
+                    ob_end_clean();
+                    return response()->download($zipName)->deleteFileAfterSend(true);
+                } else {
+                    return back()->with('error', 'Could not create the zip file');
+                }
+            } else {
+                return back()->with('error', 'No files found for this invoice');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
     protected function dispatch($id)
     {

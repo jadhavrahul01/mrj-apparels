@@ -29,10 +29,10 @@
                                 <h5>Total Orders</h5>
                                 <h2 class="fs-40 font-w600">{{ $countOrder->count() }}</h2>
                             </div>
-                            <div>
+                            {{-- <div>
                                 <span class="donut1"
                                     data-peity='{ "fill": ["var(--primary)", "rgba(242, 246, 252)"]}'>{{ $countOrder->count() }}/1000</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -43,10 +43,10 @@
                                 <h5>Pending Orders</h5>
                                 <h2 class="fs-40 font-w600">{{ $pendingOrder->count() }}</h2>
                             </div>
-                            <div>
+                            {{-- <div>
                                 <span class="donut1"
                                     data-peity='{ "fill": ["rgb(56, 226, 93,1)", "rgba(242, 246, 252)"]}'>{{ $pendingOrder->count() }}/1000</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -57,10 +57,10 @@
                                 <h5>Completed Orders</h5>
                                 <h2 class="fs-40 font-w600">{{ $completedOrder->count() }}</h2>
                             </div>
-                            <div>
+                            {{-- <div>
                                 <span class="donut1"
                                     data-peity='{ "fill": ["rgb(255, 135, 35,1)", "rgba(242, 246, 252)"]}'>{{ $completedOrder->count() }}/1000</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -71,10 +71,10 @@
                                 <h5>Tasks In Process</h5>
                                 <h2 class="fs-40 font-w600">{{ $tasksInProcess }}</h2>
                             </div>
-                            <div>
+                            {{-- <div>
                                 <span class="donut1"
                                     data-peity='{ "fill": ["rgb(51, 62, 75,1)", "rgba(242, 246, 252)"]}'>{{ $tasksInProcess }}/1000</span>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

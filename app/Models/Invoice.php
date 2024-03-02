@@ -15,5 +15,6 @@ class Invoice extends Model
         'slip_number',
         'slip_date',
         'upload_copy',
+        'employee_id',
     ];
 }

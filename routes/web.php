@@ -32,7 +32,7 @@ Route::middleware('guest')->group(function () {
 });
 
 //? Signed Routes
-Route::get('/submit/{cid}/{sname}', [UserDashboardController::class, 'empData'])->name('share-entry')->middleware('signed');
+Route::get('/submit/{cid}/{sname}', [UserDashboardController::class, 'empData'])->name('share-entry');
 Route::post('/submited', [UserDashboardController::class, 'storeEmpData'])->name('submited');
 Route::delete('/delete-empdetails/{id}', [RouteSignedController::class, 'delete']);
 Route::get('/edit-emp/{id}', [RouteSignedController::class, 'edit']);
@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('invoice', [UserOrderController::class, 'index'])->name('invoice.index');
     // Route::get('invoice/create', [UserOrderController::class, 'create'])->name('invoice.create');
     Route::post('invoice', [UserOrderController::class, 'invoice_store'])->name('invoice.store');
+    Route::get('download/{id}', [UserOrderController::class, 'download'])->name('download');
     // Route::delete('invoice/delete/{testimonial}', [UserOrderController::class, 'destroy'])->name('invoice.destroy');
     // Route::post('invoice/update/{testimonial}', [UserOrderController::class, 'update'])->name('invoice.update');
     // Route::get('invoice/edit/{testimonial}', [UserOrderController::class, 'edit'])->name('invoice.edit');

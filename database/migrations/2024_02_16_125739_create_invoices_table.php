@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,11 +12,12 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('employee_id');
             $table->string('number');
             $table->string('date');
             $table->string('slip_number');
             $table->string('slip_date');
-            $table->string('upload_copy');
+            $table->text('upload_copy');
             $table->timestamps();
         });
     }
